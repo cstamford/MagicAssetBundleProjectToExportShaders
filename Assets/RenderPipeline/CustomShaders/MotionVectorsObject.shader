@@ -20,16 +20,7 @@
                 float4 positionCS : TEXCOORD0;
                 float4 prevPositionCS : TEXCOORD1;
             };
-
-            // Helper function to check if matrix is identity
-            bool IsIdentityMatrix(float4x4 mat) {
-                return all(mat[0] == float4(1,0,0,0)) &&
-                       all(mat[1] == float4(0,1,0,0)) &&
-                       all(mat[2] == float4(0,0,1,0)) &&
-                       all(mat[3] == float4(0,0,0,1));
-            }
-
-
+            
             v2p vertex(float4 position : POSITION) {
                 v2p v2p;
                 float4 clipPos = mul(UNITY_MATRIX_VP, mul(UNITY_MATRIX_M, position));
@@ -41,10 +32,6 @@
             }
 
             float2 pixel(v2p v2p) : SV_Target {
-                if (IsIdentityMatrix(_PrevM)) {
-                    discard;
-                }
-
                 float2 currentNDC = v2p.positionCS.xy / v2p.positionCS.w;
                 float2 prevNDC = v2p.prevPositionCS.xy / v2p.prevPositionCS.w;
                 float2 vel = currentNDC - prevNDC;
